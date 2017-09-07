@@ -13,8 +13,6 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    var selectedAnnotation : MKAnnotation?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,18 +60,17 @@ class MapViewController: UIViewController {
         return newPin
     }
     
-    func populateAnnotationPin(annotation: MKAnnotation, pinView : MKAnnotationView){
-        
-        pinView.annotation = annotation
-        
-        if let selected = selectedAnnotation {
-            if selected.isEqual(annotation) {
-                pinView.tintColor = MKPinAnnotationView.redPinColor()
-                return
-            }
+    func loadOrCreateAnnotation(mapView: MKMapView, annotation: MKAnnotation) -> MKAnnotationView?{
+        let reuseKey = Constants.reuseAnnotationIdentifier
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseKey)
+        if pinView == nil {
+            pinView = buildNewAnnotationPin(annotation: annotation)
         }
-        
-        pinView.tintColor = MKPinAnnotationView.greenPinColor()
+        return pinView
+    }
+    
+    func updateAnnotationPin(annotation: MKAnnotation, pinView : MKAnnotationView){
+        pinView.annotation = annotation
     }
 }
 
@@ -85,18 +82,14 @@ extension MapViewController : MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseKey = Constants.reuseAnnotationIdentifier
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseKey)
-        if pinView == nil {
-            pinView = buildNewAnnotationPin(annotation: annotation)
-        }
-        populateAnnotationPin(annotation: annotation, pinView: pinView!)
+        
+        let pinView = loadOrCreateAnnotation(mapView: mapView, annotation: annotation)
+        updateAnnotationPin(annotation: annotation, pinView: pinView!)
         
         return pinView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("Pin selected")
-        selectedAnnotation = view.annotation
     }
 }
