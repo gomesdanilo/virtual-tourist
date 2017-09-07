@@ -369,6 +369,7 @@
 				9912B0951F61B2DC00D751F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
