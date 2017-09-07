@@ -11,6 +11,10 @@
 		9912B08A1F61B2DC00D751F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9912B0881F61B2DC00D751F6 /* Main.storyboard */; };
 		9912B08C1F61B2DC00D751F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9912B08B1F61B2DC00D751F6 /* Assets.xcassets */; };
 		9912B08F1F61B2DC00D751F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9912B08D1F61B2DC00D751F6 /* LaunchScreen.storyboard */; };
+		9912B0971F61B39600D751F6 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0961F61B39600D751F6 /* PhotoAlbumViewController.swift */; };
+		9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0981F61B3B200D751F6 /* MapViewController.swift */; };
+		9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B09E1F61B4E400D751F6 /* Constants.swift */; };
+		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +24,10 @@
 		9912B08B1F61B2DC00D751F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9912B08E1F61B2DC00D751F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9912B0901F61B2DC00D751F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9912B0961F61B39600D751F6 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		9912B0981F61B3B200D751F6 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		9912B09E1F61B4E400D751F6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,13 +60,73 @@
 		9912B0831F61B2DC00D751F6 /* virtual-tourist */ = {
 			isa = PBXGroup;
 			children = (
-				9912B0841F61B2DC00D751F6 /* AppDelegate.swift */,
-				9912B0881F61B2DC00D751F6 /* Main.storyboard */,
-				9912B08B1F61B2DC00D751F6 /* Assets.xcassets */,
-				9912B08D1F61B2DC00D751F6 /* LaunchScreen.storyboard */,
-				9912B0901F61B2DC00D751F6 /* Info.plist */,
+				9912B0A01F61B56B00D751F6 /* Model */,
+				9912B09B1F61B3BF00D751F6 /* View */,
+				9912B09A1F61B3B800D751F6 /* Controller */,
+				9912B09C1F61B3C500D751F6 /* Assets */,
+				9912B09D1F61B4BE00D751F6 /* Util */,
 			);
 			path = "virtual-tourist";
+			sourceTree = "<group>";
+		};
+		9912B09A1F61B3B800D751F6 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0981F61B3B200D751F6 /* MapViewController.swift */,
+				9912B0961F61B39600D751F6 /* PhotoAlbumViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		9912B09B1F61B3BF00D751F6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0881F61B2DC00D751F6 /* Main.storyboard */,
+				9912B08D1F61B2DC00D751F6 /* LaunchScreen.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		9912B09C1F61B3C500D751F6 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0841F61B2DC00D751F6 /* AppDelegate.swift */,
+				9912B08B1F61B2DC00D751F6 /* Assets.xcassets */,
+				9912B0901F61B2DC00D751F6 /* Info.plist */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		9912B09D1F61B4BE00D751F6 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				9912B09E1F61B4E400D751F6 /* Constants.swift */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		9912B0A01F61B56B00D751F6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0A11F61B57000D751F6 /* Clients */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		9912B0A11F61B57000D751F6 /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0A21F61B57600D751F6 /* Flickr */,
+			);
+			name = Clients;
+			sourceTree = "<group>";
+		};
+		9912B0A21F61B57600D751F6 /* Flickr */ = {
+			isa = PBXGroup;
+			children = (
+				9912B0A31F61B59300D751F6 /* FLKRClient.swift */,
+			);
+			name = Flickr;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +202,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9912B0851F61B2DC00D751F6 /* AppDelegate.swift in Sources */,
+				9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */,
+				9912B0971F61B39600D751F6 /* PhotoAlbumViewController.swift in Sources */,
+				9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */,
+				9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
