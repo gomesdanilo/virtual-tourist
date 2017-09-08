@@ -21,12 +21,16 @@ class PhotoAlbumViewController: UIViewController {
     func retrievePictureListFromFlikr() {
         
         // Temple bar
-        
-        
-        let coordinatesTempleBar = CLLocationCoordinate2D(latitude: -6.267458, longitude: 53.344932)
-        let range : Double = 20
-        let coordinates = FLKRBoundingBox(coordinates: coordinatesTempleBar, rangeInMeters: range)
-        server.retrievePictureList(coordinatesBox: coordinates)
+        let coordinates = CLLocationCoordinate2D(latitude: -6.267458, longitude: 53.344932)
+        server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
+            if let errorMessage = errorMessage {
+                print("Error", errorMessage)
+            }
+            
+            if let pictures = pictures {
+                print("Pictures", pictures)
+            }
+        }
     }
     
 
