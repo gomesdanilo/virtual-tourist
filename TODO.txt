@@ -1,0 +1,2 @@
+Map
+stop annotation from blinking when you drag the map.

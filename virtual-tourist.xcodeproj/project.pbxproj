@@ -15,10 +15,12 @@
 		9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0981F61B3B200D751F6 /* MapViewController.swift */; };
 		9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B09E1F61B4E400D751F6 /* Constants.swift */; };
 		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
+		992E45C11F632628005E866B /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = 992E45C01F632628005E866B /* TODO.txt */; };
 		9942DC411F62FF84001D27B3 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC401F62FF84001D27B3 /* MapSettings.swift */; };
 		9942DC431F630056001D27B3 /* MapSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC421F630056001D27B3 /* MapSettingsManager.swift */; };
 		9942DC461F6308DA001D27B3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */; };
 		9942DC6C1F6310BB001D27B3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC6B1F6310BB001D27B3 /* CoreDataStack.swift */; };
+		9942DC6E1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC6D1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift */; };
 		997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4631F62ABB600257E62 /* FLKRPicture.swift */; };
 		997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -34,11 +36,13 @@
 		9912B0981F61B3B200D751F6 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9912B09E1F61B4E400D751F6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
+		992E45C01F632628005E866B /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		9942DC401F62FF84001D27B3 /* MapSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		9942DC421F630056001D27B3 /* MapSettingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettingsManager.swift; sourceTree = "<group>"; };
 		9942DC451F6308DA001D27B3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		9942DC591F630D11001D27B3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		9942DC6B1F6310BB001D27B3 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		9942DC6D1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatesBoundaryBox.swift; sourceTree = "<group>"; };
 		997CA4631F62ABB600257E62 /* FLKRPicture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRPicture.swift; sourceTree = "<group>"; };
 		997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +61,7 @@
 		9912B0781F61B2DC00D751F6 = {
 			isa = PBXGroup;
 			children = (
+				992E45C01F632628005E866B /* TODO.txt */,
 				9912B0831F61B2DC00D751F6 /* virtual-tourist */,
 				9912B0821F61B2DC00D751F6 /* Products */,
 				9942DC581F630D11001D27B3 /* Frameworks */,
@@ -127,6 +132,7 @@
 				9912B0A11F61B57000D751F6 /* Clients */,
 				9942DC401F62FF84001D27B3 /* MapSettings.swift */,
 				9942DC421F630056001D27B3 /* MapSettingsManager.swift */,
+				9942DC6D1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -224,6 +230,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				992E45C11F632628005E866B /* TODO.txt in Resources */,
 				9912B08F1F61B2DC00D751F6 /* LaunchScreen.storyboard in Resources */,
 				9912B08C1F61B2DC00D751F6 /* Assets.xcassets in Resources */,
 				9912B08A1F61B2DC00D751F6 /* Main.storyboard in Resources */,
@@ -240,6 +247,7 @@
 				9912B0851F61B2DC00D751F6 /* AppDelegate.swift in Sources */,
 				9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */,
 				9942DC431F630056001D27B3 /* MapSettingsManager.swift in Sources */,
+				9942DC6E1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift in Sources */,
 				9912B0971F61B39600D751F6 /* PhotoAlbumViewController.swift in Sources */,
 				9942DC411F62FF84001D27B3 /* MapSettings.swift in Sources */,
 				997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */,
