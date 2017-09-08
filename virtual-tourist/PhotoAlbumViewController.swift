@@ -22,10 +22,7 @@ class PhotoAlbumViewController: UIViewController {
     var pin : Pin?
     var coordinates : CLLocationCoordinate2D?
     var region : MKCoordinateRegion?
-    var imageData : [UIImage?]?
     let coredataStack = AppDelegate.sharedInstance().stack
-    
-    
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
     
     override func viewDidLoad() {
@@ -52,6 +49,32 @@ class PhotoAlbumViewController: UIViewController {
         fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         
         executeSearch()
+        
+        
+        if(hasData()){
+            showPicturesGrid()
+            collectionView.reloadData()
+        }
+        else {
+            // Request data.
+            retrievePictureListFromFlikr()
+        }
+    }
+    
+    func hasData() -> Bool {
+        guard let fc = fetchedResultsController else {
+            return false
+        }
+        
+        guard let sections = fc.sections else {
+            return false
+        }
+        
+        guard sections.count > 0 else {
+            return false
+        }
+        
+        return sections[0].numberOfObjects > 0
     }
     
     func addAnnotationAndZoom(){
@@ -68,7 +91,7 @@ class PhotoAlbumViewController: UIViewController {
             do {
                 try fc.performFetch()
             } catch let e as NSError {
-                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+                print("Error while trying to perform a search: \n\(e.description)\n\(fetchedResultsController?.description)")
             }
         }
     }
@@ -135,10 +158,10 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     func imageForCell(indexPath: IndexPath) -> UIImage?{
-        if let pics = imageData {
-            let pic = pics[indexPath.row]
-            return pic
-        }
+//        if let pics = imageData {
+//            let pic = pics[indexPath.row]
+//            return pic
+//        }
         return nil
     }
     
@@ -148,16 +171,27 @@ class PhotoAlbumViewController: UIViewController {
     
     func enableNoPicturesMode(){
         // Error / No pictures
-        //self.pictures = []
-        self.imageData = []
         self.showNoPicturesLabel()
         self.collectionView?.reloadData()
     }
     
     func loadScreenWithPictures(_ pictures : [FLKRPicture]){
-        //self.pictures = pictures
-        self.imageData = Array<UIImage?>(repeating: nil, count: pictures.count)
+        
+        let context = coredataStack.context
+        
+        pictures.forEach { (pic) in
+            let entity = Photo(context: context)
+            entity.dateAdded = NSDate()
+            entity.imageData = nil
+            entity.pin = pin!
+            entity.url = pic.url
+            // TODO: add key to pic.
+            
+            coredataStack.save()
+        }
+        
         self.showPicturesGrid()
+        executeSearch()
         self.collectionView?.reloadData()
     }
     
@@ -168,13 +202,13 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     func showPicturesGrid(){
-        self.collectionView.isHidden = true
-        self.noImagesLabel.isHidden = false
+        self.collectionView.isHidden = false
+        self.noImagesLabel.isHidden = true
     }
     
     func showNoPicturesLabel(){
-        self.collectionView.isHidden = false
-        self.noImagesLabel.isHidden = true
+        self.collectionView.isHidden = true
+        self.noImagesLabel.isHidden = false
     }
     
     
