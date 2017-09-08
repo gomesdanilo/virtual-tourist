@@ -15,6 +15,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var noImagesLabel: UILabel!
+    @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
     let server = FLKRClient.sharedInstance()
     var coordinates : CLLocationCoordinate2D?
@@ -27,6 +28,9 @@ class PhotoAlbumViewController: UIViewController {
         retrievePictureListFromFlikr()
     }
     
+    @IBAction func didClickOnNewCollectionButton(_ sender: Any) {
+        
+    }
 
     
     func retrievePictureListFromFlikr() {

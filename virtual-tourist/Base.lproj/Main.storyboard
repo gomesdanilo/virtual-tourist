@@ -82,7 +82,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QpO-0k-h7t">
-                                <rect key="frame" x="0.0" y="254" width="375" height="413"/>
+                                <rect key="frame" x="0.0" y="254" width="375" height="369"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="2" id="z8r-NG-0Sn">
                                     <size key="itemSize" width="90" height="90"/>
@@ -137,23 +137,39 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1qo-XU-7vv">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="frG-sT-H9Y"/>
+                                    <barButtonItem title="New Collection" id="OMj-w1-87F">
+                                        <connections>
+                                            <action selector="didClickOnNewCollectionButton:" destination="GFQ-nb-mKV" id="6WE-gg-QlO"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="eFJ-Uj-Sbc"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ch9-XX-Xxn" secondAttribute="trailing" id="5QE-Tw-6nl"/>
                             <constraint firstAttribute="trailing" secondItem="QpO-0k-h7t" secondAttribute="trailing" id="7cb-de-qrx"/>
-                            <constraint firstAttribute="bottom" secondItem="QpO-0k-h7t" secondAttribute="bottom" id="Cia-dJ-ZQn"/>
+                            <constraint firstAttribute="bottom" secondItem="1qo-XU-7vv" secondAttribute="bottom" id="FQg-n9-1S3"/>
+                            <constraint firstItem="1qo-XU-7vv" firstAttribute="top" secondItem="QpO-0k-h7t" secondAttribute="bottom" id="JjL-gg-P7z"/>
                             <constraint firstItem="ch9-XX-Xxn" firstAttribute="leading" secondItem="WL3-iV-zuX" secondAttribute="leading" id="Q6t-2c-tCp"/>
                             <constraint firstItem="Yed-ve-aso" firstAttribute="centerX" secondItem="WL3-iV-zuX" secondAttribute="centerX" id="Wni-1x-fTF"/>
+                            <constraint firstItem="1qo-XU-7vv" firstAttribute="leading" secondItem="WL3-iV-zuX" secondAttribute="leading" id="XPK-ti-BrN"/>
                             <constraint firstItem="QpO-0k-h7t" firstAttribute="top" secondItem="ch9-XX-Xxn" secondAttribute="bottom" id="YYf-lv-tqi"/>
                             <constraint firstItem="QpO-0k-h7t" firstAttribute="leading" secondItem="WL3-iV-zuX" secondAttribute="leading" id="Yq7-4Q-N9e"/>
                             <constraint firstItem="Yed-ve-aso" firstAttribute="top" secondItem="QpO-0k-h7t" secondAttribute="top" constant="30" id="aXK-vz-s3u"/>
                             <constraint firstItem="ch9-XX-Xxn" firstAttribute="top" secondItem="uOk-Wt-zKy" secondAttribute="bottom" id="gwt-Cm-mXt"/>
+                            <constraint firstAttribute="trailing" secondItem="1qo-XU-7vv" secondAttribute="trailing" id="sIC-NS-bXy"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="QpO-0k-h7t" id="jve-6L-nAQ"/>
                         <outlet property="mapView" destination="ch9-XX-Xxn" id="Vwh-Am-gXq"/>
+                        <outlet property="newCollectionButton" destination="OMj-w1-87F" id="30H-8j-0hZ"/>
                         <outlet property="noImagesLabel" destination="Yed-ve-aso" id="HnT-aL-rYl"/>
                     </connections>
                 </viewController>
