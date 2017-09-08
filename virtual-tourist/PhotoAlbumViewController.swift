@@ -14,6 +14,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var noImagesLabel: UILabel!
     
     let server = FLKRClient.sharedInstance()
     var coordinates : CLLocationCoordinate2D?
@@ -22,27 +23,33 @@ class PhotoAlbumViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        hideGridAndLabel()
         retrievePictureListFromFlikr()
     }
+    
 
+    
     func retrievePictureListFromFlikr() {
         if let coordinates = coordinates {
             server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
-                if let errorMessage = errorMessage {
-                    //print("Error", errorMessage)
+                
+                guard errorMessage == nil else {
+                    // Error
+                    self.enableNoPicturesMode()
+                    return
                 }
                 
-                if let pictures = pictures {
-                    //print("Pictures", pictures)
-                    
-                    self.pictures = pictures
-                    self.imageData = Array<UIImage?>(repeating: nil, count: pictures.count)
+                guard let pictures = pictures else {
+                    // Error
+                    self.enableNoPicturesMode()
+                    return
+                }
+                
+                if pictures.count > 0 {
+                    self.loadScreenWithPictures(pictures)
                 } else {
-                    self.pictures = []
-                    self.imageData = []
+                    self.enableNoPicturesMode()
                 }
-                
-                self.collectionView?.reloadData()
             }
         }
     }
@@ -86,6 +93,40 @@ class PhotoAlbumViewController: UIViewController {
         return nil
     }
     
+    
+    
+    // MARK: Visibility and mode code
+    
+    func enableNoPicturesMode(){
+        // Error / No pictures
+        self.pictures = []
+        self.imageData = []
+        self.showNoPicturesLabel()
+        self.collectionView?.reloadData()
+    }
+    
+    func loadScreenWithPictures(_ pictures : [FLKRPicture]){
+        self.pictures = pictures
+        self.imageData = Array<UIImage?>(repeating: nil, count: pictures.count)
+        self.showPicturesGrid()
+        self.collectionView?.reloadData()
+    }
+    
+    
+    func hideGridAndLabel(){
+        self.collectionView.isHidden = true
+        self.noImagesLabel.isHidden = true
+    }
+    
+    func showPicturesGrid(){
+        self.collectionView.isHidden = true
+        self.noImagesLabel.isHidden = false
+    }
+    
+    func showNoPicturesLabel(){
+        self.collectionView.isHidden = false
+        self.noImagesLabel.isHidden = true
+    }
     
     
     

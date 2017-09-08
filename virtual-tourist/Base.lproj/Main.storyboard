@@ -131,6 +131,12 @@
                                     <constraint firstAttribute="height" constant="190" id="xyk-Te-7Pk"/>
                                 </constraints>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Images" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yed-ve-aso">
+                                <rect key="frame" x="128" y="284" width="119.5" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -138,14 +144,17 @@
                             <constraint firstAttribute="trailing" secondItem="QpO-0k-h7t" secondAttribute="trailing" id="7cb-de-qrx"/>
                             <constraint firstAttribute="bottom" secondItem="QpO-0k-h7t" secondAttribute="bottom" id="Cia-dJ-ZQn"/>
                             <constraint firstItem="ch9-XX-Xxn" firstAttribute="leading" secondItem="WL3-iV-zuX" secondAttribute="leading" id="Q6t-2c-tCp"/>
+                            <constraint firstItem="Yed-ve-aso" firstAttribute="centerX" secondItem="WL3-iV-zuX" secondAttribute="centerX" id="Wni-1x-fTF"/>
                             <constraint firstItem="QpO-0k-h7t" firstAttribute="top" secondItem="ch9-XX-Xxn" secondAttribute="bottom" id="YYf-lv-tqi"/>
                             <constraint firstItem="QpO-0k-h7t" firstAttribute="leading" secondItem="WL3-iV-zuX" secondAttribute="leading" id="Yq7-4Q-N9e"/>
+                            <constraint firstItem="Yed-ve-aso" firstAttribute="top" secondItem="QpO-0k-h7t" secondAttribute="top" constant="30" id="aXK-vz-s3u"/>
                             <constraint firstItem="ch9-XX-Xxn" firstAttribute="top" secondItem="uOk-Wt-zKy" secondAttribute="bottom" id="gwt-Cm-mXt"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="QpO-0k-h7t" id="jve-6L-nAQ"/>
                         <outlet property="mapView" destination="ch9-XX-Xxn" id="Vwh-Am-gXq"/>
+                        <outlet property="noImagesLabel" destination="Yed-ve-aso" id="HnT-aL-rYl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6cr-40-7BJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

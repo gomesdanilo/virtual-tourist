@@ -16,6 +16,23 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadSavedCoordinates()
+    }
+    
+    func loadSavedCoordinates(){
+        if let settings = MapSettingsManager.loadMapSettings() {
+            mapView.region = settings.region
+        }
+    }
+    
+    func saveCoordinates(){
+        let settings = MapSettings(region: mapView.region)
+        MapSettingsManager.saveMapSettings(settings)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveCoordinates()
     }
     
     @IBAction func didLongPressOnMap(_ sender: UILongPressGestureRecognizer) {
