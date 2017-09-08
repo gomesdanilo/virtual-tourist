@@ -13,7 +13,7 @@ struct Constants {
     static let reuseAnnotationIdentifier = "pin"
     
     struct Segue {
-        static let showAlbum = "showAlbum"
+        static let ShowAlbum = "showAlbum"
     }
     
     

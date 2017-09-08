@@ -15,6 +15,7 @@
 		9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0981F61B3B200D751F6 /* MapViewController.swift */; };
 		9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B09E1F61B4E400D751F6 /* Constants.swift */; };
 		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
+		9912B0A81F61D58C00D751F6 /* FLKRBoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A71F61D58C00D751F6 /* FLKRBoundingBox.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		9912B0981F61B3B200D751F6 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9912B09E1F61B4E400D751F6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
+		9912B0A71F61D58C00D751F6 /* FLKRBoundingBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRBoundingBox.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				9912B0A31F61B59300D751F6 /* FLKRClient.swift */,
+				9912B0A71F61D58C00D751F6 /* FLKRBoundingBox.swift */,
 			);
 			name = Flickr;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */,
 				9912B0971F61B39600D751F6 /* PhotoAlbumViewController.swift in Sources */,
 				9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */,
+				9912B0A81F61D58C00D751F6 /* FLKRBoundingBox.swift in Sources */,
 				9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,41 +10,106 @@ import UIKit
 
 class FLKRClient: NSObject {
 
+    let session = URLSession.shared
     
+    class func sharedInstance() -> FLKRClient {
+        struct Singleton {
+            static var sharedInstance = FLKRClient()
+        }
+        return Singleton.sharedInstance
+    }
     
+    func getSearchParameters(coordinatesBox: FLKRBoundingBox) -> [String: Any]{
     
-//    private func bboxString() -> String {
-//        // ensure bbox is bounded by minimum and maximums
-//        if let latitude = Double(latitudeTextField.text!), let longitude = Double(longitudeTextField.text!) {
-//            let minimumLon = max(longitude - Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.0)
-//            let minimumLat = max(latitude - Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.0)
-//            let maximumLon = min(longitude + Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.1)
-//            let maximumLat = min(latitude + Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.1)
-//            return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
-//        } else {
-//            return "0,0,0,0"
-//        }
-//    }
+        return [
+            Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
+            
+            // Your API application key.
+            Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
+            
+            // - A comma-delimited list of 4 values defining the Bounding Box of the area that will be searched.
+            // - The 4 values represent the bottom-left corner of the box and the top-right corner, minimum_longitude,
+            //   minimum_latitude, maximum_longitude, maximum_latitude.
+            // - Longitude has a range of -180 to 180 , latitude of -90 to 90. Defaults to -180, -90, 180, 90
+            //   if not specified.
+            Constants.FlickrParameterKeys.BoundingBox: coordinatesBox.getString(),
+            
+            // Safe search setting: 1 for safe.
+            Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
+            
+            // extras: url_m
+            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
+            
+            // format json
+            Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
+            
+            // ?
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+        ]
+    }
     
+    private func flickrURLFromParameters(_ parameters: [String: Any]) -> URL {
+        
+        var components = URLComponents()
+        components.scheme = Constants.Flickr.APIScheme
+        components.host = Constants.Flickr.APIHost
+        components.path = Constants.Flickr.APIPath
+        components.queryItems = [URLQueryItem]()
+
+        for (key, value) in parameters {
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
+        }
+
+        return components.url!
+    }
     
-//    let methodParameters = [
-//        Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
-//        Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
-//        Constants.FlickrParameterKeys.Text: phraseTextField.text!,
-//        Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
-//        Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
-//        Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
-//        Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
-//    ]
+    func retrievePictureList(coordinatesBox : FLKRBoundingBox){
+        
+        let parameters = getSearchParameters(coordinatesBox: coordinatesBox)
+        let url = flickrURLFromParameters(parameters)
+        let request = URLRequest(url: url)
+        
+        print("Requesting pictures for coordinates (\(coordinatesBox.getString()))")
+        print(url.absoluteString)
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            if let data = data {
+                print(data)
+            }
+            
+            guard let map = self.dataJsonToMap(data: data) else {
+                return
+            }
+            
+            print(map)
+            
+        }
+        task.resume()
+    }
     
+
+    func dataJsonToMap(data : Data?) -> [String:Any?]? {
+        
+        guard let data = data else {
+            // Invalid data
+            return nil
+        }
+        
+        do {
+            let map = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+            return map as? [String:Any?]
+        } catch {
+            return nil
+        }
+    }
     
-//    // MARK: Flickr API
-//
-//    private func displayImageFromFlickrBySearch(_ methodParameters: [String: AnyObject]) {
-//        
-//        // create session and request
-//        let session = URLSession.shared
-//        let request = URLRequest(url: flickrURLFromParameters(methodParameters))
+    //quest = URLRequest(url: flickrURLFromParameters(methodParameters))
 //        
 //        // create network request
 //        let task = session.dataTask(with: request) { (data, response, error) in
@@ -113,8 +178,9 @@ class FLKRClient: NSObject {
 //        // start the task!
 //        task.resume()
 //    }
-//    
-//    // FIX: For Swift 3, variable parameters are being depreciated. Instead, create a copy of the parameter inside the function.
+    
+    
+    
 //    
 //    private func displayImageFromFlickrBySearch(_ methodParameters: [String: AnyObject], withPageNumber: Int) {
 //        
@@ -215,22 +281,5 @@ class FLKRClient: NSObject {
 //        // start the task!
 //        task.resume()
 //    }
-//    
-//    // MARK: Helper for Creating a URL from Parameters
-//    
-//    private func flickrURLFromParameters(_ parameters: [String:AnyObject]) -> URL {
-//        
-//        var components = URLComponents()
-//        components.scheme = Constants.Flickr.APIScheme
-//        components.host = Constants.Flickr.APIHost
-//        components.path = Constants.Flickr.APIPath
-//        components.queryItems = [URLQueryItem]()
-//        
-//        for (key, value) in parameters {
-//            let queryItem = URLQueryItem(name: key, value: "\(value)")
-//            components.queryItems!.append(queryItem)
-//        }
-//        
-//        return components.url!
-//    }
+
 }

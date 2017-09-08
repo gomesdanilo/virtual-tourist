@@ -37,7 +37,7 @@ class MapViewController: UIViewController {
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if Constants.Segue.showAlbum == segue.identifier {
+        if Constants.Segue.ShowAlbum == segue.identifier {
             if let vc = segue.destination as? PhotoAlbumViewController {
                 // Add code here to send to the next vc
             }
@@ -72,6 +72,10 @@ class MapViewController: UIViewController {
     func updateAnnotationPin(annotation: MKAnnotation, pinView : MKAnnotationView){
         pinView.annotation = annotation
     }
+    
+    func goToPhotoAlbum(){
+        performSegue(withIdentifier: Constants.Segue.ShowAlbum, sender: self)
+    }
 }
 
 
@@ -91,5 +95,6 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("Pin selected")
+        goToPhotoAlbum()
     }
 }

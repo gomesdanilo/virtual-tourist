@@ -72,7 +72,7 @@
         <!--Album-->
         <scene sceneID="F9i-7v-99q">
             <objects>
-                <viewController title="Album" id="Bkt-2t-WfJ" sceneMemberID="viewController">
+                <viewController title="Album" id="Bkt-2t-WfJ" customClass="PhotoAlbumViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="02S-Hk-sDA"/>
                         <viewControllerLayoutGuide type="bottom" id="Xgi-vk-mgY"/>
