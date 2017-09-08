@@ -20,6 +20,7 @@ class PhotoAlbumViewController: UIViewController {
     
     let server = FLKRClient.sharedInstance()
     var coordinates : CLLocationCoordinate2D?
+    var region : MKCoordinateRegion?
     var imageData : [UIImage?]?
     
     
@@ -27,8 +28,18 @@ class PhotoAlbumViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addAnnotationAndZoom()
         hideGridAndLabel()
         retrievePictureListFromFlikr()
+    }
+    
+    func addAnnotationAndZoom(){
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinates!
+        mapView.addAnnotation(annotation)
+        
+        self.mapView.region = region!
+        self.mapView.centerCoordinate = coordinates!
     }
     
     @IBAction func didClickOnNewCollectionButton(_ sender: Any) {

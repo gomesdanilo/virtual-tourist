@@ -56,6 +56,7 @@ class MapViewController: UIViewController {
             if let vc = segue.destination as? PhotoAlbumViewController,
                 let coordinates = selectedCoordinates {
                 vc.coordinates = coordinates
+                vc.region = mapView.region
             }
         }
     }

@@ -82,7 +82,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QpO-0k-h7t">
-                                <rect key="frame" x="0.0" y="254" width="375" height="369"/>
+                                <rect key="frame" x="0.0" y="194" width="375" height="429"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="2" id="z8r-NG-0Sn">
                                     <size key="itemSize" width="90" height="90"/>
@@ -126,13 +126,13 @@
                                 </connections>
                             </collectionView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ch9-XX-Xxn">
-                                <rect key="frame" x="0.0" y="64" width="375" height="190"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="130"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="190" id="xyk-Te-7Pk"/>
+                                    <constraint firstAttribute="height" constant="130" id="xyk-Te-7Pk"/>
                                 </constraints>
                             </mapView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Images" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yed-ve-aso">
-                                <rect key="frame" x="128" y="284" width="119.5" height="30"/>
+                                <rect key="frame" x="128" y="224" width="119.5" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
