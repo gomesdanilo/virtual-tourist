@@ -8,21 +8,30 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     var selectedCoordinates : CLLocationCoordinate2D?
     
+    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadSavedCoordinates()
+        
+        
+        
+        
     }
     
     func loadSavedCoordinates(){
         if let settings = MapSettingsManager.loadMapSettings() {
             mapView.region = settings.region
         }
+        
     }
     
     func saveCoordinates(){

@@ -22,6 +22,9 @@ class PhotoAlbumViewController: UIViewController {
     var pictures : [FLKRPicture]?
     var imageData : [UIImage?]?
     
+    
+    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         hideGridAndLabel()
