@@ -12,7 +12,8 @@ import MapKit
 
 class FLKRClient: NSObject {
 
-    typealias FLKRCompletionHandler = (_ photos : [FLKRPicture]?, _ error : String?) -> Void
+    typealias FLKRListPicturesCompletionHandler = (_ photos : [FLKRPicture]?, _ error : String?) -> Void
+    typealias FLKRDownloadPictureCompletionHandler = (_ url : URL?, _ error : String?) -> Void
     
     let session = URLSession.shared
     
@@ -48,26 +49,33 @@ class FLKRClient: NSObject {
     }
     
     
-    private func parseResponseDownloadPicture(_ url : URL?, _ response : URLResponse?, _ error : Error?
-                                              ) {
+    private func parseResponseDownloadPicture(_ url : URL?, _ response : URLResponse?, _ error : Error?,
+                                              _ completionHandler : @escaping FLKRDownloadPictureCompletionHandler) {
+        func fireResults(_ url : URL?, _ error : String?) {
+            DispatchQueue.main.async {
+                completionHandler(url, error)
+            }
+        }
+        
         guard let url = url else {
+            fireResults(nil, "Failed to download picture")
             return
         }
         
-        print("Stored file", url)
+        fireResults(url, nil)
     }
     
-    func downloadPicture(url : String){
+    func downloadPicture(url : String, completionHandler : @escaping FLKRDownloadPictureCompletionHandler){
         let request = URLRequest(url: URL(string: url)!)
         
         let task = session.downloadTask(with: request) { (url, response, error) in
-            self.parseResponseDownloadPicture(url, response, error)
+            self.parseResponseDownloadPicture(url, response, error, completionHandler)
         }
         task.resume()
     }
     
     func retrievePictureList(coordinates : CLLocationCoordinate2D,
-                             completionHandler: @escaping FLKRCompletionHandler){
+                             completionHandler: @escaping FLKRListPicturesCompletionHandler){
         
         let parameters = getSearchParameters(coordinates: coordinates)
         let url = flickrURLFromParameters(parameters)
@@ -82,7 +90,7 @@ class FLKRClient: NSObject {
     }
     
     private func parseResponsePictureList(_ data : Data?, _ response : URLResponse?, _ error : Error?,
-                                  _ completionHandler: @escaping FLKRCompletionHandler) {
+                                  _ completionHandler: @escaping FLKRListPicturesCompletionHandler) {
         
         func fireResults(_ photos : [FLKRPicture]?, _ error : String?) {
             DispatchQueue.main.async {

@@ -16,6 +16,7 @@
 		9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B09E1F61B4E400D751F6 /* Constants.swift */; };
 		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
 		997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4631F62ABB600257E62 /* FLKRPicture.swift */; };
+		997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		9912B09E1F61B4E400D751F6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
 		997CA4631F62ABB600257E62 /* FLKRPicture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRPicture.swift; sourceTree = "<group>"; };
+		997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 			children = (
 				9912B0881F61B2DC00D751F6 /* Main.storyboard */,
 				9912B08D1F61B2DC00D751F6 /* LaunchScreen.storyboard */,
+				997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */,
 				9912B0971F61B39600D751F6 /* PhotoAlbumViewController.swift in Sources */,
 				997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */,
+				997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */,
 				9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */,
 				9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */,
 			);
