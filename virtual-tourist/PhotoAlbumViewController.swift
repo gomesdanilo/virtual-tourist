@@ -9,8 +9,12 @@
 import UIKit
 import MapKit
 
-class PhotoAlbumViewController: UICollectionViewController {
+class PhotoAlbumViewController: UIViewController {
 
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    
     let server = FLKRClient.sharedInstance()
     var coordinates : CLLocationCoordinate2D?
     var pictures : [FLKRPicture]?
@@ -20,7 +24,6 @@ class PhotoAlbumViewController: UICollectionViewController {
         super.viewDidLoad()
         retrievePictureListFromFlikr()
     }
-    
 
     func retrievePictureListFromFlikr() {
         if let coordinates = coordinates {
@@ -45,16 +48,7 @@ class PhotoAlbumViewController: UICollectionViewController {
     }
     
     
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let pics = pictures {
-            return pics.count
-        }
-        return 0
-    }
     
     func imageDataFromDisk(url : URL) ->UIImage?{
         do {
@@ -92,7 +86,25 @@ class PhotoAlbumViewController: UICollectionViewController {
         return nil
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    
+    
+}
+
+extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let pics = pictures {
+            return pics.count
+        }
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as! PhotoAlbumViewCell
         
         let image = imageForCell(indexPath: indexPath)
@@ -105,6 +117,4 @@ class PhotoAlbumViewController: UICollectionViewController {
         
         return cell
     }
-    
-    
 }
