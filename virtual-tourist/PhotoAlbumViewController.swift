@@ -19,9 +19,11 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
     let server = FLKRClient.sharedInstance()
+    var pin : Pin?
     var coordinates : CLLocationCoordinate2D?
     var region : MKCoordinateRegion?
     var imageData : [UIImage?]?
+    let coredataStack = AppDelegate.sharedInstance().stack
     
     
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
@@ -31,6 +33,25 @@ class PhotoAlbumViewController: UIViewController {
         addAnnotationAndZoom()
         hideGridAndLabel()
         retrievePictureListFromFlikr()
+        
+        
+        let context = coredataStack.context
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate(format: "pin = %@", pin!)
+        fetchRequest.fetchLimit = 100
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: true)]
+        
+        
+//        do {
+//            let results = try context.fetch(fetchRequest)
+//        } catch {
+//            print(error)
+//        }
+//        
+//
+        fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        executeSearch()
     }
     
     func addAnnotationAndZoom(){
@@ -40,6 +61,16 @@ class PhotoAlbumViewController: UIViewController {
         
         self.mapView.region = region!
         self.mapView.centerCoordinate = coordinates!
+    }
+    
+    func executeSearch() {
+        if let fc = fetchedResultsController {
+            do {
+                try fc.performFetch()
+            } catch let e as NSError {
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
+        }
     }
     
     @IBAction func didClickOnNewCollectionButton(_ sender: Any) {
@@ -153,19 +184,28 @@ class PhotoAlbumViewController: UIViewController {
 extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let fc = fetchedResultsController {
-            return (fc.sections?.count)!
-        } else {
+        guard let fc = fetchedResultsController else {
             return 0
         }
+        
+        guard let sections = fc.sections else {
+            return 0
+        }
+        
+        return sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let fc = fetchedResultsController {
-            return fc.sections![section].numberOfObjects
-        } else {
+        
+        guard let fc = fetchedResultsController else {
             return 0
         }
+        
+        guard let sections = fc.sections else {
+            return 0
+        }
+        
+        return sections[section].numberOfObjects
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

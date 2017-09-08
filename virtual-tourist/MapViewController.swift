@@ -12,10 +12,11 @@ import CoreData
 
 class MapViewController: UIViewController {
 
+    @IBOutlet weak var mapView: MKMapView!
+    
     var pinList : [Pin]?
     let coredataStack = AppDelegate.sharedInstance().stack
-    
-    @IBOutlet weak var mapView: MKMapView!
+    var selectedPin : Pin?
     var selectedCoordinates : CLLocationCoordinate2D?
     
     
@@ -57,6 +58,7 @@ class MapViewController: UIViewController {
                 let coordinates = selectedCoordinates {
                 vc.coordinates = coordinates
                 vc.region = mapView.region
+                vc.pin = selectedPin
             }
         }
     }
@@ -64,16 +66,19 @@ class MapViewController: UIViewController {
     // MARK: - Annotations
     
     func addAnnotationWithCoordinates(_ coordinates : CLLocationCoordinate2D){
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinates
-        mapView.addAnnotation(annotation)
         
+        // Create and save entity
         let context = coredataStack.context
         let newPin = Pin(context: context)
         newPin.latitude = coordinates.latitude
         newPin.longitude = coordinates.longitude
-        
         coredataStack.save()
+        
+        // Create annotation on map
+        let annotation = PinAnnotation()
+        annotation.pin = newPin
+        annotation.coordinate = coordinates
+        mapView.addAnnotation(annotation)
     }
     
     func buildNewAnnotationPin(annotation: MKAnnotation) -> MKAnnotationView {
@@ -97,8 +102,9 @@ class MapViewController: UIViewController {
         pinView.annotation = annotation
     }
     
-    func goToPhotoAlbumWithCoodinates(_ coordinates : CLLocationCoordinate2D){
+    func goToPhotoAlbumWithCoodinates(_ coordinates : CLLocationCoordinate2D, pin: Pin){
         selectedCoordinates = coordinates
+        selectedPin = pin
         performSegue(withIdentifier: Constants.Segue.ShowAlbum, sender: self)
     }
     
@@ -118,9 +124,10 @@ class MapViewController: UIViewController {
         }
     }
     
-    func createAnnotationWithPin(_ pin : Pin) -> MKPointAnnotation {
-        let annotation = MKPointAnnotation()
+    func createAnnotationWithPin(_ pin : Pin) -> PinAnnotation {
+        let annotation = PinAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+        annotation.pin = pin
         return annotation
     }
     
@@ -157,6 +164,9 @@ class MapViewController: UIViewController {
     
 }
 
+class PinAnnotation : MKPointAnnotation {
+    var pin : Pin?
+}
 
 extension MapViewController : MKMapViewDelegate {
     
@@ -172,7 +182,8 @@ extension MapViewController : MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if let annotation = view.annotation {
-            goToPhotoAlbumWithCoodinates(annotation.coordinate)
+            let pin = (view.annotation as! PinAnnotation).pin!
+            goToPhotoAlbumWithCoodinates(annotation.coordinate, pin:pin)
         }
     }
 }
