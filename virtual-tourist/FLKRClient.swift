@@ -23,7 +23,7 @@ class FLKRClient: NSObject {
         return Singleton.sharedInstance
     }
     
-    func getSearchParameters(coordinates: CLLocationCoordinate2D) -> [String: Any]{
+    private func getSearchParameters(coordinates: CLLocationCoordinate2D) -> [String: Any]{
         
         var param = Constants.Flickr.SearchParameters
         param[Constants.Flickr.ParameterKeys.Latitude] = "\(coordinates.latitude)"
@@ -47,6 +47,25 @@ class FLKRClient: NSObject {
         return components.url!
     }
     
+    
+    private func parseResponseDownloadPicture(_ url : URL?, _ response : URLResponse?, _ error : Error?
+                                              ) {
+        guard let url = url else {
+            return
+        }
+        
+        print("Stored file", url)
+    }
+    
+    func downloadPicture(url : String){
+        let request = URLRequest(url: URL(string: url)!)
+        
+        let task = session.downloadTask(with: request) { (url, response, error) in
+            self.parseResponseDownloadPicture(url, response, error)
+        }
+        task.resume()
+    }
+    
     func retrievePictureList(coordinates : CLLocationCoordinate2D,
                              completionHandler: @escaping FLKRCompletionHandler){
         
@@ -57,13 +76,13 @@ class FLKRClient: NSObject {
         print("Requesting pictures for coordinate...", url.absoluteString)
         
         let task = session.dataTask(with: request) { (data, response, error) in
-            self.parseResponse(data, response, error, completionHandler)
+            self.parseResponsePictureList(data, response, error, completionHandler)
         }
         task.resume()
     }
     
-    func parseResponse(_ data : Data?, _ response : URLResponse?, _ error : Error?,
-                       _ completionHandler: @escaping FLKRCompletionHandler) {
+    private func parseResponsePictureList(_ data : Data?, _ response : URLResponse?, _ error : Error?,
+                                  _ completionHandler: @escaping FLKRCompletionHandler) {
         
         func fireResults(_ photos : [FLKRPicture]?, _ error : String?) {
             DispatchQueue.main.async {

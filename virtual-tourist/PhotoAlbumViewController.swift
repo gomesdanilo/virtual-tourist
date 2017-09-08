@@ -12,26 +12,25 @@ import MapKit
 class PhotoAlbumViewController: UIViewController {
 
     let server = FLKRClient.sharedInstance()
+    var coordinates : CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         retrievePictureListFromFlikr()
     }
+    
 
     func retrievePictureListFromFlikr() {
-        
-        // Temple bar
-        let coordinates = CLLocationCoordinate2D(latitude: -6.267458, longitude: 53.344932)
-        server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
-            if let errorMessage = errorMessage {
-                print("Error", errorMessage)
-            }
-            
-            if let pictures = pictures {
-                print("Pictures", pictures)
+        if let coordinates = coordinates {
+            server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
+                if let errorMessage = errorMessage {
+                    print("Error", errorMessage)
+                }
+                
+                if let pictures = pictures {
+                    print("Pictures", pictures)
+                }
             }
         }
     }
-    
-
 }

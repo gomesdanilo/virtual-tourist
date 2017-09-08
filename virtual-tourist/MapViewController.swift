@@ -12,18 +12,11 @@ import MapKit
 class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
+    var selectedCoordinates : CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     @IBAction func didLongPressOnMap(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
@@ -34,12 +27,12 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Navigation
-
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if Constants.Segue.ShowAlbum == segue.identifier {
-            if let vc = segue.destination as? PhotoAlbumViewController {
-                // Add code here to send to the next vc
+            if let vc = segue.destination as? PhotoAlbumViewController,
+                let coordinates = selectedCoordinates {
+                vc.coordinates = coordinates
             }
         }
     }
@@ -73,28 +66,36 @@ class MapViewController: UIViewController {
         pinView.annotation = annotation
     }
     
-    func goToPhotoAlbum(){
+    func goToPhotoAlbumWithCoodinates(_ coordinates : CLLocationCoordinate2D){
+        selectedCoordinates = coordinates
         performSegue(withIdentifier: Constants.Segue.ShowAlbum, sender: self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        deselectAnnotations()
+    }
+    
+    func deselectAnnotations(){
+        let selected = mapView.selectedAnnotations
+        selected.forEach { (annotation) in
+            mapView.deselectAnnotation(annotation, animated: false)
+        }
     }
 }
 
 
 extension MapViewController : MKMapViewDelegate {
-
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("Region changed")
-    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let pinView = loadOrCreateAnnotation(mapView: mapView, annotation: annotation)
         updateAnnotationPin(annotation: annotation, pinView: pinView!)
-        
         return pinView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("Pin selected")
-        goToPhotoAlbum()
+        if let annotation = view.annotation {
+            goToPhotoAlbumWithCoodinates(annotation.coordinate)
+        }
     }
 }
