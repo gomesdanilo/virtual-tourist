@@ -17,6 +17,7 @@
 		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
 		9942DC411F62FF84001D27B3 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC401F62FF84001D27B3 /* MapSettings.swift */; };
 		9942DC431F630056001D27B3 /* MapSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC421F630056001D27B3 /* MapSettingsManager.swift */; };
+		9942DC461F6308DA001D27B3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */; };
 		997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4631F62ABB600257E62 /* FLKRPicture.swift */; };
 		997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,8 @@
 		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
 		9942DC401F62FF84001D27B3 /* MapSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		9942DC421F630056001D27B3 /* MapSettingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettingsManager.swift; sourceTree = "<group>"; };
+		9942DC451F6308DA001D27B3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		9942DC591F630D11001D27B3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		997CA4631F62ABB600257E62 /* FLKRPicture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRPicture.swift; sourceTree = "<group>"; };
 		997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,6 +57,7 @@
 			children = (
 				9912B0831F61B2DC00D751F6 /* virtual-tourist */,
 				9912B0821F61B2DC00D751F6 /* Products */,
+				9942DC581F630D11001D27B3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,9 +121,11 @@
 		9912B0A01F61B56B00D751F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9942DC471F630C43001D27B3 /* Core Data Stack */,
 				9912B0A11F61B57000D751F6 /* Clients */,
 				9942DC401F62FF84001D27B3 /* MapSettings.swift */,
 				9942DC421F630056001D27B3 /* MapSettingsManager.swift */,
+				9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -139,6 +145,21 @@
 				997CA4631F62ABB600257E62 /* FLKRPicture.swift */,
 			);
 			name = Flickr;
+			sourceTree = "<group>";
+		};
+		9942DC471F630C43001D27B3 /* Core Data Stack */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Core Data Stack";
+			sourceTree = "<group>";
+		};
+		9942DC581F630D11001D27B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9942DC591F630D11001D27B3 /* CoreData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +241,7 @@
 				9942DC411F62FF84001D27B3 /* MapSettings.swift in Sources */,
 				997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */,
 				997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */,
+				9942DC461F6308DA001D27B3 /* Model.xcdatamodeld in Sources */,
 				9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */,
 				9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */,
 			);
@@ -388,6 +410,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9942DC451F6308DA001D27B3 /* Model.xcdatamodel */,
+			);
+			currentVersion = 9942DC451F6308DA001D27B3 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9912B0791F61B2DC00D751F6 /* Project object */;
 }
