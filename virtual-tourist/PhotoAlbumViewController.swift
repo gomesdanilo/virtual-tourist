@@ -26,11 +26,11 @@ class PhotoAlbumViewController: UICollectionViewController {
         if let coordinates = coordinates {
             server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
                 if let errorMessage = errorMessage {
-                    print("Error", errorMessage)
+                    //print("Error", errorMessage)
                 }
                 
                 if let pictures = pictures {
-                    print("Pictures", pictures)
+                    //print("Pictures", pictures)
                     
                     self.pictures = pictures
                     self.imageData = Array<UIImage?>(repeating: nil, count: pictures.count)

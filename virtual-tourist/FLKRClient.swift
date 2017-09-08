@@ -81,8 +81,6 @@ class FLKRClient: NSObject {
         let url = flickrURLFromParameters(parameters)
         let request = URLRequest(url: url)
         
-        print("Requesting pictures for coordinate...", url.absoluteString)
-        
         let task = session.dataTask(with: request) { (data, response, error) in
             self.parseResponsePictureList(data, response, error, completionHandler)
         }
