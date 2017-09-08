@@ -129,32 +129,28 @@ class PhotoAlbumViewController: UIViewController {
     
     
     
-    func imageDataFromDisk(url : URL) ->UIImage?{
+    func imageDataFromDisk(url : URL) -> Data?{
         do {
             let data = try Data(contentsOf: url)
-            return UIImage(data: data)
+            return data
         } catch {
             return nil
         }
     }
     
-    func downloadPicture(indexPath: IndexPath){
+    func downloadPictureForPhoto(_ photo: Photo, indexPath : IndexPath){
         
-//        if let pics = pictures {
-//            let pic = pics[indexPath.row]
-//            if let url = pic.url {
-//                FLKRClient.sharedInstance().downloadPicture(url: url, completionHandler: { (url, error) in
-//                    
-//                    guard let url = url else {
-//                        return
-//                    }
-//                    
-//                    let image = self.imageDataFromDisk(url: url)
-//                    self.imageData![indexPath.row] = image
-//                    self.collectionView?.reloadItems(at: [indexPath])
-//                })
-//            }
-//        }
+        FLKRClient.sharedInstance().downloadPicture(url: photo.url!) { (url, error) in
+            
+            guard let url = url else {
+                return
+            }
+            
+            // TODO: Verify what to do with pictures. Load on background?
+            photo.imageData = self.imageDataFromDisk(url: url) as NSData?
+            self.coredataStack.save()
+            self.collectionView?.reloadItems(at: [indexPath])
+        }
     }
     
     func imageForCell(indexPath: IndexPath) -> UIImage?{
@@ -246,17 +242,14 @@ extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionVie
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as! PhotoAlbumViewCell
         
         let photo = fetchedResultsController!.object(at: indexPath) as! Photo
-        print("rendering phoro: ", photo.url!)
-//        
-//        
-//        let image = imageForCell(indexPath: indexPath)
-//        if(image != nil){
-//            cell.updatePicture(image: image!)
-//        } else {
-//            cell.startLoading()
-//            downloadPicture(indexPath: indexPath)
-//        }
-//        
+        
+        if let data = photo.imageData as Data? {
+            cell.updatePicture(image: UIImage(data: data)!)
+        } else {
+            cell.startLoading()
+            downloadPictureForPhoto(photo, indexPath: indexPath)
+        }
+        
         return cell
     }
 }
