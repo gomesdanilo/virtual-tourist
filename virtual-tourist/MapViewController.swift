@@ -76,7 +76,7 @@ extension MapViewController {
     
     func addAnnotationWithCoordinates(_ coordinates : CLLocationCoordinate2D){
         
-        // Create and save entity
+        // Creates and saves entity, saving in the context.
         let context = coredataStack.context
         let newPin = Pin(context: context)
         newPin.latitude = coordinates.latitude

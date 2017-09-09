@@ -12,12 +12,13 @@ import CoreData
 
 class PhotoAlbumViewController: UIViewController {
 
+    // MARK: UI
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
-    
     @IBOutlet weak var noImagesLabel: UILabel!
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
+    // MARK: Data
     let server = FLKRClient.sharedInstance()
     var pin : Pin?
     var coordinates : CLLocationCoordinate2D?
@@ -25,12 +26,29 @@ class PhotoAlbumViewController: UIViewController {
     let coredataStack = AppDelegate.sharedInstance().stack
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        addAnnotationAndZoom()
-        hideGridAndLabel()
-        retrievePictureListFromFlikr()
         
+        fetchedResultsController = createFetchedResultsController()
+        
+        addAnnotationAndZoom()
+        retrievePhotosOnDisk()
+        if hasDataOnDisk() {
+            showCollectionCompleteMode()
+            refreshCollection()
+        } else {
+            showCollectionDownloadMode()
+            retrievePhotosFromFlikr()
+        }
+    }
+}
+
+// MARK: - Data, Logic
+
+extension PhotoAlbumViewController {
+    
+    func createFetchedResultsController() -> NSFetchedResultsController<NSFetchRequestResult>? {
         
         let context = coredataStack.context
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
@@ -38,44 +56,11 @@ class PhotoAlbumViewController: UIViewController {
         fetchRequest.fetchLimit = 100
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: true)]
         
-        
-//        do {
-//            let results = try context.fetch(fetchRequest)
-//        } catch {
-//            print(error)
-//        }
-//        
-//
-        fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        
-        executeSearch()
-        
-        
-        if(hasData()){
-            showPicturesGrid()
-            collectionView.reloadData()
-        }
-        else {
-            // Request data.
-            retrievePictureListFromFlikr()
-        }
+        return NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest,
+                                                                managedObjectContext: context,
+                                                                sectionNameKeyPath: nil, cacheName: nil)
     }
     
-    func hasData() -> Bool {
-        guard let fc = fetchedResultsController else {
-            return false
-        }
-        
-        guard let sections = fc.sections else {
-            return false
-        }
-        
-        guard sections.count > 0 else {
-            return false
-        }
-        
-        return sections[0].numberOfObjects > 0
-    }
     
     func addAnnotationAndZoom(){
         let annotation = MKPointAnnotation()
@@ -86,7 +71,7 @@ class PhotoAlbumViewController: UIViewController {
         self.mapView.centerCoordinate = coordinates!
     }
     
-    func executeSearch() {
+    func retrievePhotosOnDisk() {
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()
@@ -96,84 +81,66 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
     
-    @IBAction func didClickOnNewCollectionButton(_ sender: Any) {
+    func hasDataOnDisk() -> Bool {
         
+        guard let sections = fetchedResultsController?.sections else {
+            return false
+        }
+        
+        guard sections.count > 0 else {
+            return false
+        }
+        
+        return sections[0].numberOfObjects > 0
     }
-
     
-    func retrievePictureListFromFlikr() {
-        if let coordinates = coordinates {
-            server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
-                
-                guard errorMessage == nil else {
-                    // Error
-                    self.enableNoPicturesMode()
-                    return
-                }
-                
-                guard let pictures = pictures else {
-                    // Error
-                    self.enableNoPicturesMode()
-                    return
-                }
-                
-                if pictures.count > 0 {
-                    self.loadScreenWithPictures(pictures)
-                } else {
-                    self.enableNoPicturesMode()
-                }
-            }
+    
+    func handleResponseFromFlikr(_ pictures : [FLKRPicture]?, _ errorMessage : String?){
+        
+        guard errorMessage == nil else {
+            // Error
+            return
+        }
+        
+        guard let pictures = pictures else {
+            // Error
+            return
+        }
+        
+        if pictures.count > 0 {
+            // Has pictures, save pictures to db, loads screen 
+            // and starts download.
+            showCollectionCompleteMode()
+            savePicturesOnDisk(pictures)
+            retrievePhotosOnDisk()
+            refreshCollection()
+        } else {
+            // No pictures, show proper screen.
+            showNoPicturesMode()
         }
     }
     
-    
-    
-    
-    func imageDataFromDisk(url : URL) -> Data?{
-        do {
-            let data = try Data(contentsOf: url)
-            return data
-        } catch {
-            return nil
+    func retrievePhotosFromFlikr() {
+        
+        guard let coordinates = coordinates else {
+            // Invalid coordinates
+            return
+        }
+        
+        server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
+            self.handleResponseFromFlikr(pictures, errorMessage)
         }
     }
     
-    func downloadPictureForPhoto(_ photo: Photo, indexPath : IndexPath){
-        
-        FLKRClient.sharedInstance().downloadPicture(url: photo.url!) { (url, error) in
-            
-            guard let url = url else {
-                return
-            }
-            
-            // TODO: Verify what to do with pictures. Load on background?
-            photo.imageData = self.imageDataFromDisk(url: url) as NSData?
-            self.coredataStack.save()
-            self.collectionView?.reloadItems(at: [indexPath])
-        }
+    func refreshCollection(){
+        self.collectionView.reloadData()
     }
     
-    func imageForCell(indexPath: IndexPath) -> UIImage?{
-//        if let pics = imageData {
-//            let pic = pics[indexPath.row]
-//            return pic
-//        }
-        return nil
-    }
+    func savePicturesOnDisk(_ pictures : [FLKRPicture]){
     
-    
-    
-    // MARK: Visibility and mode code
-    
-    func enableNoPicturesMode(){
-        // Error / No pictures
-        self.showNoPicturesLabel()
-        self.collectionView?.reloadData()
-    }
-    
-    func loadScreenWithPictures(_ pictures : [FLKRPicture]){
-        
         let context = coredataStack.context
+        
+        // TODO: Delete previous data
         
         pictures.forEach { (pic) in
             let entity = Photo(context: context)
@@ -181,44 +148,54 @@ class PhotoAlbumViewController: UIViewController {
             entity.imageData = nil
             entity.pin = pin!
             entity.url = pic.url
-            // TODO: add key to pic.
+            // TODO: add key to pic. from flickr
             
             coredataStack.save()
         }
-        
-        self.showPicturesGrid()
-        executeSearch()
-        self.collectionView?.reloadData()
     }
-    
-    
-    func hideGridAndLabel(){
-        self.collectionView.isHidden = true
-        self.noImagesLabel.isHidden = true
-    }
-    
-    func showPicturesGrid(){
-        self.collectionView.isHidden = false
-        self.noImagesLabel.isHidden = true
-    }
-    
-    func showNoPicturesLabel(){
-        self.collectionView.isHidden = true
-        self.noImagesLabel.isHidden = false
-    }
-    
-    
     
 }
+
+// MARK: - UI Modes
+
+extension PhotoAlbumViewController {
+    
+    func showNoPicturesMode (){
+        collectionView.isHidden = true
+        noImagesLabel.isHidden = false
+        newCollectionButton.isEnabled = true
+    }
+    
+    func showCollectionDownloadMode(){
+        collectionView.isHidden = false
+        noImagesLabel.isHidden = true
+        newCollectionButton.isEnabled = false
+    }
+    
+    func showCollectionCompleteMode(){
+        collectionView.isHidden = false
+        noImagesLabel.isHidden = true
+        newCollectionButton.isEnabled = true
+    }
+}
+
+
+// MARK: - Events
+
+extension PhotoAlbumViewController {
+    
+    @IBAction func didClickOnNewCollectionButton(_ sender: Any) {
+        print("click on new collection")
+    }
+
+}
+
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
 extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        guard let fc = fetchedResultsController else {
-            return 0
-        }
-        
-        guard let sections = fc.sections else {
+        guard let sections = fetchedResultsController?.sections else {
             return 0
         }
         
@@ -227,11 +204,7 @@ extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        guard let fc = fetchedResultsController else {
-            return 0
-        }
-        
-        guard let sections = fc.sections else {
+        guard let sections = fetchedResultsController?.sections else {
             return 0
         }
         
@@ -239,16 +212,18 @@ extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as! PhotoAlbumViewCell
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as! PhotoAlbumViewCell
         let photo = fetchedResultsController!.object(at: indexPath) as! Photo
         
-        if let data = photo.imageData as Data? {
-            cell.updatePicture(image: UIImage(data: data)!)
-        } else {
-            cell.startLoading()
-            downloadPictureForPhoto(photo, indexPath: indexPath)
-        }
+        // TODO: Check this
+        
+//        if let data = photo.imageData as Data? {
+//            cell.updatePicture(image: UIImage(data: data)!)
+//        } else {
+//            cell.startLoading()
+//            downloadPictureForPhoto(photo, indexPath: indexPath)
+//        }
         
         return cell
     }
