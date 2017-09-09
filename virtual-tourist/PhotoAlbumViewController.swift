@@ -48,6 +48,29 @@ class PhotoAlbumViewController: UIViewController {
 
 extension PhotoAlbumViewController {
     
+    func deleteAllPictures(){
+        
+        let context = coredataStack.context
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Photo")
+        fetchRequest.includesPropertyValues = false // only fetch the managedObjectID
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            
+            // Call on block?
+            
+            results.forEach({ (entry) in
+                context.delete(entry)
+            })
+            
+            coredataStack.save()
+            
+            
+        } catch {
+            // Error
+        }
+    }
+    
     func createFetchedResultsController() -> NSFetchedResultsController<NSFetchRequestResult>? {
         
         let context = coredataStack.context
@@ -106,6 +129,8 @@ extension PhotoAlbumViewController {
             // Error
             return
         }
+        
+        deleteAllPictures()
         
         if pictures.count > 0 {
             // Has pictures, save pictures to db, loads screen 
@@ -199,7 +224,7 @@ extension PhotoAlbumViewController {
 extension PhotoAlbumViewController {
     
     @IBAction func didClickOnNewCollectionButton(_ sender: Any) {
-        print("click on new collection")
+        retrievePhotosFromFlikr()
     }
 
 }
