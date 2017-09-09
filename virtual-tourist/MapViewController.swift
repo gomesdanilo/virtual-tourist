@@ -24,6 +24,7 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     // Data
+    var preferencesLoaded = false
     var pinList : [Pin]?
     let coredataStack = AppDelegate.sharedInstance().stack
     var selectedPin : Pin?
@@ -31,7 +32,6 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSavedCoordinates()
         retrievePinsWithCurrentLocation()
     }
     
@@ -44,6 +44,17 @@ class MapViewController: UIViewController {
         super.viewWillAppear(animated)
         deselectAnnotations()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Apparently there is bug if we call this with viewDidLoad.
+        // https://stackoverflow.com/questions/4221200/mkmapview-setregion-isnt-constant
+        if !preferencesLoaded {
+            preferencesLoaded = true
+            loadSavedCoordinates()
+        }
+    }
 }
 
 // MARK - Navigation
@@ -55,7 +66,9 @@ extension MapViewController {
             if let vc = segue.destination as? PhotoAlbumViewController,
                 let coordinates = selectedCoordinates {
                 vc.coordinates = coordinates
-                vc.region = mapView.region
+                
+                let span = MKCoordinateSpanMake(0, mapView.region.span.longitudeDelta)
+                vc.region = MKCoordinateRegionMake(coordinates,span)
                 vc.pin = selectedPin
             }
         }

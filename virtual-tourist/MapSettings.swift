@@ -10,28 +10,35 @@ import UIKit
 import MapKit
 
 struct MapSettings {
+    
     let region : MKCoordinateRegion
     
     init(region : MKCoordinateRegion) {
         self.region = region
     }
     
-    init(dictionary : [String: Double]){
+    init?(dictionary : [String: Double]){
         
-        let latitude = dictionary["center.latitude"]!
-        let longitude = dictionary["center.longitude"]!
-        let latitudeDelta = dictionary["span.latitudeDelta"]!
-        let longitudeDelta = dictionary["span.longitudeDelta"]!
+        guard let latitude = dictionary["center.latitude"] else {
+            return nil
+        }
+        guard let longitude = dictionary["center.longitude"] else {
+            return nil
+        }
         
-        let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let span = MKCoordinateSpanMake(latitudeDelta, longitudeDelta)
-        self.region = MKCoordinateRegionMake(coordinates, span)
+        guard let longitudeDelta = dictionary["span.longitudeDelta"] else {
+            return nil
+        }
+        
+        let center = CLLocationCoordinate2D(latitude: latitude,
+                                            longitude: longitude)
+        let span = MKCoordinateSpanMake(0, longitudeDelta)
+        self.region = MKCoordinateRegionMake(center, span)
     }
     
     func getDictionary() -> [String: Double]{
         return ["center.latitude": region.center.latitude,
                 "center.longitude": region.center.longitude,
-                "span.latitudeDelta": region.span.latitudeDelta,
                 "span.longitudeDelta": region.span.longitudeDelta]
     }
 }
