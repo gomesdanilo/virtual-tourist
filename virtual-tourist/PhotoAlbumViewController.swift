@@ -148,9 +148,23 @@ extension PhotoAlbumViewController {
             entity.imageData = nil
             entity.pin = pin!
             entity.url = pic.url
-            // TODO: add key to pic. from flickr
             
             coredataStack.save()
+        }
+    }
+    
+    func downloadImage(_ photo: Photo, indexPath : IndexPath){
+        
+        FLKRClient.sharedInstance().downloadPicture(url: photo.url!) { (data, errorMessage) in
+            
+            guard let data = data else {
+                // Error
+                return
+            }
+            
+            photo.imageData = data as NSData
+            self.coredataStack.save()
+            self.collectionView?.reloadItems(at: [indexPath])
         }
     }
     
@@ -216,14 +230,12 @@ extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionVie
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as! PhotoAlbumViewCell
         let photo = fetchedResultsController!.object(at: indexPath) as! Photo
         
-        // TODO: Check this
-        
-//        if let data = photo.imageData as Data? {
-//            cell.updatePicture(image: UIImage(data: data)!)
-//        } else {
-//            cell.startLoading()
-//            downloadPictureForPhoto(photo, indexPath: indexPath)
-//        }
+        if let data = photo.imageData as Data? {
+            cell.updatePicture(image: UIImage(data: data)!)
+        } else {
+            cell.startLoading()
+            downloadImage(photo, indexPath: indexPath)
+        }
         
         return cell
     }
