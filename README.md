@@ -5,7 +5,9 @@ The Virtual Tourist app downloads and stores images from Flickr. The app allows 
 
 Requirements:
 https://docs.google.com/document/d/1j-UIi1jJGuNWKoEjEk09wwYf4ebefnwcVrUYbiHh1MI/pub?embedded=true
+
 https://review.udacity.com/#!/projects/3071048833/rubric
+
 https://itunes.apple.com/us/app/virtual-tourist-portfolio/id994696845?mt=8
 
 Specs
