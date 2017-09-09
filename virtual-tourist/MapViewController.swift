@@ -93,7 +93,7 @@ extension MapViewController {
     func buildNewAnnotationPin(annotation: MKAnnotation) -> MKAnnotationView {
         let reuseId = Constants.reuseAnnotationIdentifier
         let newPin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        newPin.pinTintColor = MKPinAnnotationView.greenPinColor()
+        newPin.pinTintColor = MKPinAnnotationView.redPinColor()
         newPin.canShowCallout = false
         return newPin
     }
