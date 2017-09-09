@@ -145,7 +145,8 @@ extension MapViewController {
         do {
             pinList = try managedContext.fetch(fetchRequest) as? [Pin]
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+            let message = "Failed to retrieve pins. \(error), \(error.userInfo)"
+            UIUtil.showErrorMessage(message, viewController: self)
             pinList = nil
         }
         

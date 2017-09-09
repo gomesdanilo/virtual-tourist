@@ -99,7 +99,8 @@ extension PhotoAlbumViewController {
             do {
                 try fc.performFetch()
             } catch let e as NSError {
-                print("Error while trying to perform a search: \n\(e.description)\n\(fetchedResultsController?.description)")
+                let message = "Error while trying to perform a search: \n\(e.description)\n\(fc.description)"
+                UIUtil.showErrorMessage(message, viewController: self)
             }
         }
     }
@@ -121,12 +122,12 @@ extension PhotoAlbumViewController {
     func handleResponseFromFlikr(_ pictures : [FLKRPicture]?, _ errorMessage : String?){
         
         guard errorMessage == nil else {
-            // Error
+            UIUtil.showErrorMessage(errorMessage!, viewController: self)
             return
         }
         
         guard let pictures = pictures else {
-            // Error
+            UIUtil.showErrorMessage("Failed to retrieve pictures", viewController: self)
             return
         }
         

@@ -23,6 +23,7 @@
 		9942DC6E1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC6D1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift */; };
 		997CA4641F62ABB600257E62 /* FLKRPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4631F62ABB600257E62 /* FLKRPicture.swift */; };
 		997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */; };
+		99947A4B1F6454C6004DC776 /* UIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99947A4A1F6454C6004DC776 /* UIUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		9942DC6D1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatesBoundaryBox.swift; sourceTree = "<group>"; };
 		997CA4631F62ABB600257E62 /* FLKRPicture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRPicture.swift; sourceTree = "<group>"; };
 		997CA4651F62B62200257E62 /* PhotoAlbumViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewCell.swift; sourceTree = "<group>"; };
+		99947A4A1F6454C6004DC776 /* UIUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				9912B09E1F61B4E400D751F6 /* Constants.swift */,
+				99947A4A1F6454C6004DC776 /* UIUtil.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				997CA4661F62B62200257E62 /* PhotoAlbumViewCell.swift in Sources */,
 				9942DC461F6308DA001D27B3 /* Model.xcdatamodeld in Sources */,
 				9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */,
+				99947A4B1F6454C6004DC776 /* UIUtil.swift in Sources */,
 				9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
