@@ -1,8 +1,7 @@
 Virtual Tourist
 Project Submission for the course NanoDegree - iOS Developer at Udacity
 
-This app allows you to see picture galleries using your map/gps. You can manage these galleries locally for further access and customization.
-
+The Virtual Tourist app downloads and stores images from Flickr. The app allows users to drop pins on a map, as if they were stops on a tour. Users will then be able to download pictures for the location and persist both the pictures, and the association of the pictures with the pin.
 
 Requirements:
 https://docs.google.com/document/d/1j-UIi1jJGuNWKoEjEk09wwYf4ebefnwcVrUYbiHh1MI/pub?embedded=true

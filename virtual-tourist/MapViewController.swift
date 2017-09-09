@@ -10,15 +10,24 @@ import UIKit
 import MapKit
 import CoreData
 
+// MARK: - PinAnnotation
+
+class PinAnnotation : MKPointAnnotation {
+    var pin : Pin?
+}
+
+// MARK: - MapViewController
+
 class MapViewController: UIViewController {
 
+    // UI
     @IBOutlet weak var mapView: MKMapView!
     
+    // Data
     var pinList : [Pin]?
     let coredataStack = AppDelegate.sharedInstance().stack
     var selectedPin : Pin?
     var selectedCoordinates : CLLocationCoordinate2D?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,31 +35,20 @@ class MapViewController: UIViewController {
         retrievePinsWithCurrentLocation()
     }
     
-    func loadSavedCoordinates(){
-        if let settings = MapSettingsManager.loadMapSettings() {
-            mapView.region = settings.region
-        }
-    }
-    
-    func saveCoordinatesPreferences(){
-        let settings = MapSettings(region: mapView.region)
-        MapSettingsManager.saveMapSettings(settings)
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         saveCoordinatesPreferences()
     }
-    
-    @IBAction func didLongPressOnMap(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            let touchPoint = sender.location(in: mapView)
-            let coordinates =  mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            addAnnotationWithCoordinates(coordinates)
-        }
+   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        deselectAnnotations()
     }
-    
-    // MARK: - Navigation
+}
+
+// MARK - Navigation
+
+extension MapViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if Constants.Segue.ShowAlbum == segue.identifier {
@@ -63,7 +61,18 @@ class MapViewController: UIViewController {
         }
     }
     
-    // MARK: - Annotations
+    func goToPhotoAlbumWithCoodinates(_ coordinates : CLLocationCoordinate2D, pin: Pin){
+        selectedCoordinates = coordinates
+        selectedPin = pin
+        performSegue(withIdentifier: Constants.Segue.ShowAlbum, sender: self)
+    }
+    
+
+}
+
+// MARK - Annotations
+
+extension MapViewController {
     
     func addAnnotationWithCoordinates(_ coordinates : CLLocationCoordinate2D){
         
@@ -102,17 +111,6 @@ class MapViewController: UIViewController {
         pinView.annotation = annotation
     }
     
-    func goToPhotoAlbumWithCoodinates(_ coordinates : CLLocationCoordinate2D, pin: Pin){
-        selectedCoordinates = coordinates
-        selectedPin = pin
-        performSegue(withIdentifier: Constants.Segue.ShowAlbum, sender: self)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        deselectAnnotations()
-    }
-    
     func deleteAnnotations(){
         mapView.removeAnnotations(mapView.annotations)
     }
@@ -125,6 +123,7 @@ class MapViewController: UIViewController {
     }
     
     func createAnnotationWithPin(_ pin : Pin) -> PinAnnotation {
+        
         let annotation = PinAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
         annotation.pin = pin
@@ -161,16 +160,52 @@ class MapViewController: UIViewController {
             mapView.addAnnotation(createAnnotationWithPin(pin))
         }
     }
-    
 }
 
-class PinAnnotation : MKPointAnnotation {
-    var pin : Pin?
+// MARK - Events
+
+extension MapViewController {
+
+    @IBAction func didLongPressOnMap(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            // Converts touch location to gps coordinates
+            let touchPoint = sender.location(in: mapView)
+            let coordinates =  mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            
+            // Add annotation to map
+            addAnnotationWithCoordinates(coordinates)
+        }
+    }
 }
+
+// MARK: - Coordinates preferences (load, save, update)
+
+extension MapViewController {
+    
+    func loadSavedCoordinates(){
+        if let settings =  AppDelegate.sharedInstance().mapSettings {
+            mapView.region = settings.region
+        }
+    }
+    
+    func updateCoordinatesPreferences() {
+        let settings = MapSettings(region: mapView.region)
+        AppDelegate.sharedInstance().mapSettings = settings
+    }
+    
+    func saveCoordinatesPreferences(){
+        updateCoordinatesPreferences()
+        AppDelegate.sharedInstance().saveMapSettings()
+    }
+
+}
+
+// MARK: - MKMapViewDelegate
 
 extension MapViewController : MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        updateCoordinatesPreferences()
         retrievePinsWithCurrentLocation()
     }
     
@@ -181,9 +216,10 @@ extension MapViewController : MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let annotation = view.annotation {
-            let pin = (view.annotation as! PinAnnotation).pin!
-            goToPhotoAlbumWithCoodinates(annotation.coordinate, pin:pin)
+        if let annotation = view.annotation as? PinAnnotation {
+            if let pin = annotation.pin {
+                goToPhotoAlbumWithCoodinates(annotation.coordinate, pin:pin)
+            }
         }
     }
 }
