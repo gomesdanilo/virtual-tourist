@@ -193,6 +193,12 @@ extension PhotoAlbumViewController {
         }
     }
     
+    func deletePhoto(_ photo: Photo){
+        let context = coredataStack.context
+        context.delete(photo)
+        coredataStack.save()
+    }
+    
 }
 
 // MARK: - UI Modes
@@ -263,5 +269,15 @@ extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionVie
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        collectionView.performBatchUpdates({ 
+            let photo = self.fetchedResultsController!.object(at: indexPath) as! Photo
+            self.deletePhoto(photo)
+            collectionView.deleteItems(at: [indexPath])
+            self.retrievePhotosOnDisk()
+        }, completion: nil)
     }
 }

@@ -38,7 +38,12 @@ struct Constants {
             "extras" : "url_m",
             "format" : "json",
             "nojsoncallback" : "1",
-            "accuracy" : Flickr.StreetAccuracy
+            //"accuracy" : Flickr.StreetAccuracy,
+            "sort" : "date-posted-desc",
+            "per_page" : "100",
+            
+            "radius_units" : "km",
+            "radius" : "0.300" // 300 meters from center.
         ]
         
     }
