@@ -30,6 +30,9 @@ class MapViewController: UIViewController {
     var selectedPin : Pin?
     var selectedCoordinates : CLLocationCoordinate2D?
     
+    var pinOnCreation : PinAnnotation?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         retrievePinsWithCurrentLocation()
@@ -86,22 +89,7 @@ extension MapViewController {
 // MARK - Annotations
 
 extension MapViewController {
-    
-    func addAnnotationWithCoordinates(_ coordinates : CLLocationCoordinate2D){
-        
-        // Creates and saves entity, saving in the context.
-        let context = coredataStack.context
-        let newPin = Pin(context: context)
-        newPin.latitude = coordinates.latitude
-        newPin.longitude = coordinates.longitude
-        coredataStack.save()
-        
-        // Create annotation on map
-        let annotation = PinAnnotation()
-        annotation.pin = newPin
-        annotation.coordinate = coordinates
-        mapView.addAnnotation(annotation)
-    }
+  
     
     func buildNewAnnotationPin(annotation: MKAnnotation) -> MKAnnotationView {
         let reuseId = Constants.reuseAnnotationIdentifier
@@ -181,13 +169,45 @@ extension MapViewController {
 extension MapViewController {
 
     @IBAction func didLongPressOnMap(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            // Converts touch location to gps coordinates
-            let touchPoint = sender.location(in: mapView)
-            let coordinates =  mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        
+        // Converts touch location to gps coordinates
+        let touchPoint = sender.location(in: mapView)
+        let coordinates =  mapView.convert(touchPoint, toCoordinateFrom: mapView)
+
+        
+        switch sender.state {
+        case .began:
+            // Create annotation on map
+            pinOnCreation = PinAnnotation()
+            pinOnCreation?.coordinate = coordinates
+            mapView.addAnnotation(pinOnCreation!)
             
-            // Add annotation to map
-            addAnnotationWithCoordinates(coordinates)
+            
+        case .changed:
+            // Updates coordinates
+            pinOnCreation?.coordinate = coordinates
+           
+            
+        case .ended:
+            if let pinOnCreation = pinOnCreation {
+                
+                // Updates coordinates
+                pinOnCreation.coordinate = coordinates
+                
+                // Creates and saves entity, saving in the context.
+                let context = coredataStack.context
+                let newPin = Pin(context: context)
+                newPin.latitude = coordinates.latitude
+                newPin.longitude = coordinates.longitude
+                coredataStack.save()
+                
+                // Updates reference
+                pinOnCreation.pin = newPin
+            }
+            pinOnCreation = nil
+            
+        default:
+            break
         }
     }
 }
