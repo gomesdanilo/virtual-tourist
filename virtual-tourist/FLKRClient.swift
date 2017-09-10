@@ -78,6 +78,10 @@ class FLKRClient: NSObject {
         parameters[Constants.Flickr.ParameterKeys.Longitude] = "\(coordinates.longitude)"
         parameters[Constants.Flickr.ParameterKeys.Page] = "\(pin.page)"
         
+        
+        print("Retrieving pictures from flickr with page \(pin.page) for coordinates \(coordinates.longitude),\(coordinates.latitude)")
+        
+        
         let url = flickrURLFromParameters(parameters)
         let request = URLRequest(url: url)
         

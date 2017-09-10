@@ -32,6 +32,9 @@ class PhotoAlbumViewController: UIViewController {
         
         fetchedResultsController = createFetchedResultsController()
         
+        if let pin = pin {
+            print("Photo album for pin with coordinates \(pin.longitude),\(pin.latitude)")
+        }
         addAnnotationAndZoom()
         retrievePhotosOnDisk()
         if hasDataOnDisk() {
