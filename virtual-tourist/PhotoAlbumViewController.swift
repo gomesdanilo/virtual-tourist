@@ -12,6 +12,13 @@ import CoreData
 
 class PhotoAlbumViewController: UIViewController {
 
+    enum AlbumUIMode {
+        case NoPictures
+        case DownloadMode
+        case CompleteMode
+    }
+    
+    
     // MARK: UI
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -38,10 +45,10 @@ class PhotoAlbumViewController: UIViewController {
         addAnnotationAndZoom()
         retrievePhotosOnDisk()
         if hasDataOnDisk() {
-            showCollectionCompleteMode()
+            updateUIMode(.CompleteMode)
             refreshCollection()
         } else {
-            showCollectionDownloadMode()
+            updateUIMode(.DownloadMode)
             retrievePhotosFromFlikr()
         }
     }
@@ -146,6 +153,7 @@ extension PhotoAlbumViewController {
         // Updates DB.
         coredataStack.save()
         
+        updateUIMode(.DownloadMode)
         
         server.retrievePictureList(pin: pin) { (response) in
             guard response.success else {
@@ -169,13 +177,13 @@ extension PhotoAlbumViewController {
             if pictures.count > 0 {
                 // Has pictures, save pictures to db, loads screen
                 // and starts download.
-                self.showCollectionCompleteMode()
+                self.updateUIMode(.CompleteMode)
                 self.savePicturesOnDisk(pictures)
                 self.retrievePhotosOnDisk()
                 self.refreshCollection()
             } else {
                 // No pictures, show proper screen.
-                self.showNoPicturesMode()
+                self.updateUIMode(.NoPictures)
             }
         }
     }
@@ -228,22 +236,25 @@ extension PhotoAlbumViewController {
 
 extension PhotoAlbumViewController {
     
-    func showNoPicturesMode (){
-        collectionView.isHidden = true
-        noImagesLabel.isHidden = false
-        newCollectionButton.isEnabled = true
-    }
-    
-    func showCollectionDownloadMode(){
-        collectionView.isHidden = false
-        noImagesLabel.isHidden = true
-        newCollectionButton.isEnabled = false
-    }
-    
-    func showCollectionCompleteMode(){
-        collectionView.isHidden = false
-        noImagesLabel.isHidden = true
-        newCollectionButton.isEnabled = true
+    func updateUIMode(_ mode : AlbumUIMode){
+        
+        switch mode {
+        case .NoPictures:
+            collectionView.isHidden = true
+            noImagesLabel.isHidden = false
+            newCollectionButton.isEnabled = true
+            print("no pictures mode")
+        case .DownloadMode:
+            collectionView.isHidden = false
+            noImagesLabel.isHidden = true
+            newCollectionButton.isEnabled = false
+            print("download mode")
+        case .CompleteMode:
+            collectionView.isHidden = false
+            noImagesLabel.isHidden = true
+            newCollectionButton.isEnabled = true
+            print("complete mode")
+        }
     }
 }
 
