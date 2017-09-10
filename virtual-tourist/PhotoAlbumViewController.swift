@@ -24,7 +24,7 @@ class PhotoAlbumViewController: UIViewController {
     var coordinates : CLLocationCoordinate2D?
     var region : MKCoordinateRegion?
     let coredataStack = AppDelegate.sharedInstance().stack
-    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
+    var fetchedResultsController : NSFetchedResultsController<NSManagedObject>?
     
     
     override func viewDidLoad() {
@@ -54,8 +54,9 @@ extension PhotoAlbumViewController {
     func deleteAllPictures(){
         
         let context = coredataStack.context
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Photo")
-        fetchRequest.includesPropertyValues = false // only fetch the managedObjectID
+        let fetchRequest = createFetchResquest()
+        // only fetch the managedObjectID
+        fetchRequest.includesPropertyValues = false
         
         do {
             let results = try context.fetch(fetchRequest)
@@ -74,15 +75,18 @@ extension PhotoAlbumViewController {
         }
     }
     
-    func createFetchedResultsController() -> NSFetchedResultsController<NSFetchRequestResult>? {
+    func createFetchResquest() -> NSFetchRequest<NSManagedObject>{
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate(format: "pin = %@", pin!)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: true)]
+        return fetchRequest
+    }
+    
+    func createFetchedResultsController() -> NSFetchedResultsController<NSManagedObject>? {
         
         let context = coredataStack.context
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate(format: "pin = %@", pin!)
-        fetchRequest.fetchLimit = 100
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: true)]
-        
-        return NSFetchedResultsController<NSFetchRequestResult>(fetchRequest: fetchRequest,
+        let fetchRequest = createFetchResquest()
+        return NSFetchedResultsController<NSManagedObject>(fetchRequest: fetchRequest,
                                                                 managedObjectContext: context,
                                                                 sectionNameKeyPath: nil, cacheName: nil)
     }
@@ -122,43 +126,6 @@ extension PhotoAlbumViewController {
     }
     
     
-    func handleResponseFromFlikr(_ response : FLKRResponse){
-        
-        guard response.success else {
-            UIUtil.showErrorMessage(response.errorMessage!, viewController: self)
-            return
-        }
-        
-        // Removes all pictures from DB, to replace with new set.
-        deleteAllPictures()
-        
-        guard let pictures = response.pictures else {
-            UIUtil.showErrorMessage("Failed to retrieve data from flickr.", viewController: self)
-            return
-        }
-        
-        guard let pin = pin else {
-            // Invalid pin
-            return
-        }
-        
-        // Updates current page data.
-        pin.page = response.page
-        pin.numberOfPages = response.numberOfPages
-        coredataStack.save()
-        
-        if pictures.count > 0 {
-            // Has pictures, save pictures to db, loads screen 
-            // and starts download.
-            showCollectionCompleteMode()
-            savePicturesOnDisk(pictures)
-            retrievePhotosOnDisk()
-            refreshCollection()
-        } else {
-            // No pictures, show proper screen.
-            showNoPicturesMode()
-        }
-    }
     
     func retrievePhotosFromFlikr() {
         
@@ -181,7 +148,35 @@ extension PhotoAlbumViewController {
         
         
         server.retrievePictureList(pin: pin) { (response) in
-            self.handleResponseFromFlikr(response)
+            guard response.success else {
+                UIUtil.showErrorMessage(response.errorMessage!, viewController: self)
+                return
+            }
+            
+            // Removes all pictures from DB linked to same pin, to replace with new set.
+            self.deleteAllPictures()
+            
+            guard let pictures = response.pictures else {
+                UIUtil.showErrorMessage("Failed to retrieve data from flickr.", viewController: self)
+                return
+            }
+            
+            // Updates current page data.
+            pin.page = response.page
+            pin.numberOfPages = response.numberOfPages
+            self.coredataStack.save()
+            
+            if pictures.count > 0 {
+                // Has pictures, save pictures to db, loads screen
+                // and starts download.
+                self.showCollectionCompleteMode()
+                self.savePicturesOnDisk(pictures)
+                self.retrievePhotosOnDisk()
+                self.refreshCollection()
+            } else {
+                // No pictures, show proper screen.
+                self.showNoPicturesMode()
+            }
         }
     }
     
