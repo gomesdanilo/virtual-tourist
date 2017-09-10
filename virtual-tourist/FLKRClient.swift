@@ -12,7 +12,7 @@ import MapKit
 
 class FLKRClient: NSObject {
 
-    typealias FLKRListPicturesCompletionHandler = (_ photos : [FLKRPicture]?, _ error : String?) -> Void
+    typealias FLKRListPicturesCompletionHandler = (_ response : FLKRResponse) -> Void
     typealias FLKRDownloadPictureCompletionHandler = (_ data : Data?, _ error : String?) -> Void
     
     let session = URLSession.shared
@@ -23,14 +23,7 @@ class FLKRClient: NSObject {
         }
         return Singleton.sharedInstance
     }
-    
-    private func getSearchParameters(coordinates: CLLocationCoordinate2D) -> [String: Any]{
-        
-        var param = Constants.Flickr.SearchParameters
-        param[Constants.Flickr.ParameterKeys.Latitude] = "\(coordinates.latitude)"
-        param[Constants.Flickr.ParameterKeys.Longitude] = "\(coordinates.longitude)"
-        return param
-    }
+  
     
     private func flickrURLFromParameters(_ parameters: [String: Any]) -> URL {
         
@@ -74,10 +67,17 @@ class FLKRClient: NSObject {
         task.resume()
     }
     
-    func retrievePictureList(coordinates : CLLocationCoordinate2D,
+    func retrievePictureList(pin : Pin,
                              completionHandler: @escaping FLKRListPicturesCompletionHandler){
         
-        let parameters = getSearchParameters(coordinates: coordinates)
+        // Search parameters
+        let coordinates = CLLocationCoordinate2DMake(pin.latitude, pin.longitude)
+        
+        var parameters = Constants.Flickr.SearchParameters
+        parameters[Constants.Flickr.ParameterKeys.Latitude] = "\(coordinates.latitude)"
+        parameters[Constants.Flickr.ParameterKeys.Longitude] = "\(coordinates.longitude)"
+        parameters[Constants.Flickr.ParameterKeys.Page] = "\(pin.page)"
+        
         let url = flickrURLFromParameters(parameters)
         let request = URLRequest(url: url)
         
@@ -90,49 +90,51 @@ class FLKRClient: NSObject {
     private func parseResponsePictureList(_ data : Data?, _ response : URLResponse?, _ error : Error?,
                                   _ completionHandler: @escaping FLKRListPicturesCompletionHandler) {
         
-        func fireResults(_ photos : [FLKRPicture]?, _ error : String?) {
+        func fireResults(_ photos : [FLKRPicture]?, _ page: Int32?, _ numberOfPages : Int32?, _ error : String?) {
             DispatchQueue.main.async {
-                completionHandler(photos, error)
+                
+                if let photos = photos, let page = page, let numberOfPages = numberOfPages {
+                    completionHandler(FLKRResponse(pictures: photos, page: page, numberOfPages: numberOfPages))
+                } else if let error = error {
+                    completionHandler(FLKRResponse(errorMessage: error))
+                } else {
+                    completionHandler(FLKRResponse(errorMessage: "Failed to retrieve pictures from flickr"))
+                }
             }
         }
         
         guard error == nil else {
-            fireResults(nil, error!.localizedDescription)
+            fireResults(nil, nil, nil, error!.localizedDescription)
             return
         }
         
-//        guard let resp = response else {
-//            fireResults(nil, "Invalid response type")
-//            return
-//        }
-        
         guard let data = data else {
-            fireResults(nil, "Invalid response data")
+            fireResults(nil, nil, nil, "Invalid response data")
             return
         }
         
         guard let map = self.dataJsonToMap(data: data) else {
-            fireResults(nil, "Invalid response json")
+            fireResults(nil, nil, nil, "Invalid response json")
             return
         }
         
         guard let photos = map["photos"] as? [String: Any?] else {
-            fireResults(nil, "Invalid response json")
+            fireResults(nil, nil, nil, "Invalid response json")
             return
         }
         
         guard let stat = map["stat"] as? String else {
-            fireResults(nil, "Stat param not found")
+            fireResults(nil, nil, nil, "Stat param not found")
             return
         }
         
         guard "ok" == stat else {
-            fireResults(nil, "Server returned error")
+            fireResults(nil, nil, nil, "Server returned error")
             return
         }
         
         guard let photoList = photos["photo"] as? [[String : Any?]] else {
-            fireResults(nil, "Invalid response json")
+            fireResults(nil, nil, nil, "Invalid response json")
             return
         }
         
@@ -143,8 +145,11 @@ class FLKRClient: NSObject {
             return picture
         }
         
+        let page = photos["page"] as! Int32
+        let numberOfPages = photos["pages"] as! Int32
+        
         // Success!
-        fireResults(pictures, nil)
+        fireResults(pictures, page, numberOfPages, nil)
     }
     
 

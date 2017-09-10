@@ -61,7 +61,8 @@ struct CoreDataStack {
         do {
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType,
                                               configurationName: nil,
-                                              at: databaseUrl, options: nil)
+                                              at: databaseUrl,
+                                              options: CoreDataStack.getMigrationOptions())
         } catch {
             print("Failed to add persistentStore at \(databaseUrl)")
             return nil
@@ -93,18 +94,18 @@ struct CoreDataStack {
     }
     
     
-    func getMigrationOptions() -> [String : Any]{
+    static func getMigrationOptions() -> [String : Any]{
         return [NSInferMappingModelAutomaticallyOption: true,
                 NSMigratePersistentStoresAutomaticallyOption: true]
     }
     
     
     func dropAllData() throws {
-        
-        try coordinator.destroyPersistentStore(at: databaseUrl, ofType: NSSQLiteStoreType, options: nil)
+        let options = CoreDataStack.getMigrationOptions()
+        try coordinator.destroyPersistentStore(at: databaseUrl, ofType: NSSQLiteStoreType, options: options)
         try coordinator.addPersistentStore(ofType: NSSQLiteStoreType,
                                            configurationName: nil,
-                                           at: databaseUrl, options: nil)
+                                           at: databaseUrl, options: options)
     }
 
     func save() {

@@ -15,6 +15,7 @@
 		9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0981F61B3B200D751F6 /* MapViewController.swift */; };
 		9912B09F1F61B4E400D751F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B09E1F61B4E400D751F6 /* Constants.swift */; };
 		9912B0A41F61B59300D751F6 /* FLKRClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9912B0A31F61B59300D751F6 /* FLKRClient.swift */; };
+		993B7A1F1F6546AC0096E852 /* FLKRResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993B7A1E1F6546AC0096E852 /* FLKRResponse.swift */; };
 		9942DC411F62FF84001D27B3 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC401F62FF84001D27B3 /* MapSettings.swift */; };
 		9942DC431F630056001D27B3 /* MapSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC421F630056001D27B3 /* MapSettingsManager.swift */; };
 		9942DC461F6308DA001D27B3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */; };
@@ -36,6 +37,8 @@
 		9912B0981F61B3B200D751F6 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9912B09E1F61B4E400D751F6 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		9912B0A31F61B59300D751F6 /* FLKRClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRClient.swift; sourceTree = "<group>"; };
+		993B7A1D1F653DCB0096E852 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
+		993B7A1E1F6546AC0096E852 /* FLKRResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FLKRResponse.swift; sourceTree = "<group>"; };
 		9942DC401F62FF84001D27B3 /* MapSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		9942DC421F630056001D27B3 /* MapSettingsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettingsManager.swift; sourceTree = "<group>"; };
 		9942DC451F6308DA001D27B3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -150,6 +153,7 @@
 			children = (
 				9912B0A31F61B59300D751F6 /* FLKRClient.swift */,
 				997CA4631F62ABB600257E62 /* FLKRPicture.swift */,
+				993B7A1E1F6546AC0096E852 /* FLKRResponse.swift */,
 			);
 			name = Flickr;
 			sourceTree = "<group>";
@@ -244,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9912B0851F61B2DC00D751F6 /* AppDelegate.swift in Sources */,
+				993B7A1F1F6546AC0096E852 /* FLKRResponse.swift in Sources */,
 				9912B0991F61B3B200D751F6 /* MapViewController.swift in Sources */,
 				9942DC431F630056001D27B3 /* MapSettingsManager.swift in Sources */,
 				9942DC6E1F631FAF001D27B3 /* CoordinatesBoundaryBox.swift in Sources */,
@@ -427,9 +432,10 @@
 		9942DC441F6308DA001D27B3 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				993B7A1D1F653DCB0096E852 /* Model 2.xcdatamodel */,
 				9942DC451F6308DA001D27B3 /* Model.xcdatamodel */,
 			);
-			currentVersion = 9942DC451F6308DA001D27B3 /* Model.xcdatamodel */;
+			currentVersion = 993B7A1D1F653DCB0096E852 /* Model 2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

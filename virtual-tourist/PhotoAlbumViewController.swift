@@ -119,19 +119,30 @@ extension PhotoAlbumViewController {
     }
     
     
-    func handleResponseFromFlikr(_ pictures : [FLKRPicture]?, _ errorMessage : String?){
+    func handleResponseFromFlikr(_ response : FLKRResponse){
         
-        guard errorMessage == nil else {
-            UIUtil.showErrorMessage(errorMessage!, viewController: self)
+        guard response.success else {
+            UIUtil.showErrorMessage(response.errorMessage!, viewController: self)
             return
         }
         
-        guard let pictures = pictures else {
-            UIUtil.showErrorMessage("Failed to retrieve pictures", viewController: self)
-            return
-        }
-        
+        // Removes all pictures from DB, to replace with new set.
         deleteAllPictures()
+        
+        guard let pictures = response.pictures else {
+            UIUtil.showErrorMessage("Failed to retrieve data from flickr.", viewController: self)
+            return
+        }
+        
+        guard let pin = pin else {
+            // Invalid pin
+            return
+        }
+        
+        // Updates current page data.
+        pin.page = response.page
+        pin.numberOfPages = response.numberOfPages
+        coredataStack.save()
         
         if pictures.count > 0 {
             // Has pictures, save pictures to db, loads screen 
@@ -148,13 +159,26 @@ extension PhotoAlbumViewController {
     
     func retrievePhotosFromFlikr() {
         
-        guard let coordinates = coordinates else {
-            // Invalid coordinates
+        guard let pin = pin else {
+            // Invalid pin
             return
         }
         
-        server.retrievePictureList(coordinates: coordinates) { (pictures, errorMessage) in
-            self.handleResponseFromFlikr(pictures, errorMessage)
+        // Calculates page number.
+        if pin.page == 0 || pin.numberOfPages == 0 {
+            pin.page = 1
+            pin.numberOfPages = 1
+        }
+        else {
+            // Goes to next page. If last page is hit, then restarts the cycle.
+            pin.page = (pin.page + 1) % pin.numberOfPages
+        }
+        // Updates DB.
+        coredataStack.save()
+        
+        
+        server.retrievePictureList(pin: pin) { (response) in
+            self.handleResponseFromFlikr(response)
         }
     }
     

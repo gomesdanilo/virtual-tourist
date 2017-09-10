@@ -29,6 +29,7 @@ struct Constants {
         struct ParameterKeys {
             static let Latitude = "lat"
             static let Longitude = "lon"
+            static let Page = "page"
         }
         
         static let SearchParameters = [
@@ -38,12 +39,15 @@ struct Constants {
             "extras" : "url_m",
             "format" : "json",
             "nojsoncallback" : "1",
-            //"accuracy" : Flickr.StreetAccuracy,
             "sort" : "date-posted-desc",
-            "per_page" : "100",
+            "per_page" : "30",
             
-            "radius_units" : "km",
-            "radius" : "0.300" // 300 meters from center.
+            // Searchs everything on the same road, 
+            // that's the highest accuracy available on flickr.
+            "accuracy" : Flickr.StreetAccuracy,
+            
+            //"radius_units" : "km",
+            //"radius" : "0.300" // 300 meters from center.
         ]
         
     }
